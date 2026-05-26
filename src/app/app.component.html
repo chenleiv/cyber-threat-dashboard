@@ -1,65 +1,97 @@
 <div class="dashboard-container">
   
-  <header>
-    <h1>Cyber Threat Intelligence Dashboard</h1>
-    <div class="metrics">
-      <div class="metric-card critical">
-        <h3>Critical Alerts</h3>
-        <p>{{ criticalCount() }}</p>
+  <header class="main-header">
+    <h1>ThreatIntel Console</h1>
+    <div class="metrics-bar">
+      <div class="metric critical">
+        <span class="label">Critical:</span> 
+        <span class="value">{{ criticalCount() }}</span>
       </div>
-      <div class="metric-card total">
-        <h3>Total Open Alerts</h3>
-        <p>{{ totalOpenCount() }}</p>
+      <div class="metric active">
+        <span class="label">Active Total:</span> 
+        <span class="value">{{ totalOpenCount() }}</span>
       </div>
     </div>
   </header>
 
-  <section class="filters-panel">
+  <section class="toolbar">
     <input 
       type="text" 
-      placeholder="Search by Title, IP or Asset..." 
+      placeholder="Filter by Threat, IP or Asset..." 
       (input)="onSearch($event)"
       class="search-input"
     />
-
-    <div class="filter-buttons">
+    <div class="filter-group">
       <button (click)="onSeverityChange('all')">All</button>
-      <button (click)="onSeverityChange('critical')" class="btn-critical">Critical</button>
-      <button (click)="onSeverityChange('high')" class="btn-high">High</button>
+      <button (click)="onSeverityChange('critical')">Critical</button>
+      <button (click)="onSeverityChange('high')">High</button>
       <button (click)="onSeverityChange('medium')">Medium</button>
     </div>
   </section>
 
-  <main class="alerts-list">
-    <h2>Active Threats ({{ filteredAlerts().length }})</h2>
-
-    @for (alert of filteredAlerts(); track alert.id) {
-      <div class="alert-card" [class]="alert.severity">
-        <div class="alert-header">
-          <span class="badge" [class]="alert.status">{{ alert.status.toUpperCase() }}</span>
-          <span class="severity-tag">{{ alert.severity.toUpperCase() }}</span>
-          <span class="timestamp">{{ alert.timestamp }}</span>
-        </div>
-        
-        <h3>{{ alert.title }}</h3>
-        <p class="description">{{ alert.description }}</p>
-        
-        <div class="alert-footer">
-          <span><strong>Source IP:</strong> {{ alert.sourceIp }}</span>
-          <span><strong>Target Asset:</strong> {{ alert.targetAsset }}</span>
+  <div class="split-view">
+    
+    <aside class="master-panel">
+      @for (alert of filteredAlerts(); track alert.id) {
+        <div 
+          class="compact-card" 
+          [class.active]="selectedAlert()?.id === alert.id"
+          [class]="alert.severity"
+          (click)="selectedAlert.set(alert)">
           
-          @if (alert.status !== 'resolved') {
-            <button (click)="onStatusChange(alert.id, alert.status)" class="action-btn">
-              {{ alert.status === 'open' ? 'Start Investigation' : 'Resolve Incident' }}
-            </button>
-          }
+          <div class="card-top">
+            <span class="severity-text">{{ alert.severity | uppercase }}</span>
+            <span class="card-time">{{ alert.timestamp | date:'HH:mm:ss' }}</span>
+          </div>
+          <div class="card-title">{{ alert.title }}</div>
+          
         </div>
-      </div>
-    } @empty {
-      <div class="empty-state">
-        <p>✅ No threats detected matching your criteria. System secure.</p>
-      </div>
-    }
-  </main>
+      } @empty {
+        <div class="empty-state">No active threats detected.</div>
+      }
+    </aside>
 
+    <main class="detail-panel">
+      @if (selectedAlert(); as alert) {
+        <div class="detail-container">
+          
+          <div class="detail-header">
+            <h2>{{ alert.title }}</h2>
+            <span class="badge" [class]="alert.status">{{ alert.status }}</span>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-cell"><strong>Severity:</strong> <span class="severity-tag" [class]="alert.severity">{{ alert.severity | uppercase }}</span></div>
+            <div class="info-cell"><strong>Source IP:</strong> <span class="mono">{{ alert.sourceIp }}</span></div>
+            <div class="info-cell"><strong>Target Asset:</strong> <span>{{ alert.targetAsset }}</span></div>
+            <div class="info-cell"><strong>Time Detected:</strong> <span>{{ alert.timestamp | date:'HH:mm:ss' }}</span></div>
+          </div>
+
+          <div class="detail-section">
+            <h3>Incident Description</h3>
+            <p class="desc-text">{{ alert.description }}</p>
+          </div>
+
+          <div class="detail-section">
+            <h3>Raw Data Log (JSON)</h3>
+            <pre class="json-box"><code>{{ alert | json }}</code></pre>
+          </div>
+
+          <div class="detail-actions">
+            @if (alert.status !== 'resolved') {
+              <button (click)="onStatusChange(alert.id, alert.status)" class="action-btn">
+                {{ alert.status === 'open' ? 'Investigate Incident' : 'Resolve Incident' }}
+              </button>
+            }
+          </div>
+
+        </div>
+      } @else {
+        <div class="no-selection">
+          <p>Select an incident from the list to begin deep investigation</p>
+        </div>
+      }
+    </main>
+
+  </div>
 </div>
