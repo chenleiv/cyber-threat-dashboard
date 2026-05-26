@@ -1,0 +1,249 @@
+/* עיצוב כללי של הדף בסגנון Dark Mode */
+:host {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-card: #21262d;
+  --border-color: #30363d;
+  --text-main: #c9d1d9;
+  --text-muted: #8b949e;
+  
+  --color-critical: #f85149;
+  --color-high: #db6d28;
+  --color-medium: #d29922;
+  --color-success: #56d364;
+  --color-info: #58a6ff;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  background-color: var(--bg-primary);
+  display: block;
+  min-height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin: 0;
+  background: linear-gradient(45deg, #58a6ff, #bc8cff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.metrics {
+  display: flex;
+  gap: 1rem;
+}
+
+.metric-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  min-width: 140px;
+  text-align: center;
+}
+
+.metric-card h3 {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.metric-card p {
+  margin: 0.5rem 0 0 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.metric-card.critical p {
+  color: var(--color-critical);
+}
+
+.metric-card.total p {
+  color: var(--color-info);
+}
+
+.filters-panel {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 250px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-info);
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-buttons button {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-main);
+  padding: 0.75rem 1.2rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.filter-buttons button:hover {
+  background-color: var(--bg-card);
+  border-color: var(--text-muted);
+}
+
+.filter-buttons button.btn-critical:hover {
+  border-color: var(--color-critical);
+  color: var(--color-critical);
+}
+
+.filter-buttons button.btn-high:hover {
+  border-color: var(--color-high);
+  color: var(--color-high);
+}
+
+.alerts-list h2 {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.alert-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--text-muted); 
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.alert-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.alert-card.critical { border-left-color: var(--color-critical); }
+.alert-card.high { border-left-color: var(--color-high); }
+.alert-card.medium { border-left-color: var(--color-medium); }
+.alert-card.low { border-left-color: var(--color-info); }
+
+.alert-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.severity-tag {
+  font-weight: bold;
+  color: var(--text-muted);
+}
+
+.alert-card.critical .severity-tag { color: var(--color-critical); }
+.alert-card.high .severity-tag { color: var(--color-high); }
+
+.timestamp {
+  color: var(--text-muted);
+  margin-left: auto; 
+}
+
+.badge {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+.badge.open { background-color: rgba(248, 81, 73, 0.15); color: var(--color-critical); }
+.badge.investigating { background-color: rgba(210, 153, 34, 0.15); color: var(--color-medium); }
+.badge.resolved { background-color: rgba(86, 211, 100, 0.15); color: var(--color-success); }
+
+.alert-card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.description {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin: 0 0 1.5rem 0;
+}
+
+.alert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.alert-footer strong {
+  color: var(--text-main);
+}
+
+.action-btn {
+  background-color: var(--color-info);
+  color: #0d1117;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.action-btn:hover {
+  opacity: 0.9;
+}
+
+.empty-state {
+  background-color: var(--bg-secondary);
+  border: 1px dashed var(--border-color);
+  border-radius: 6px;
+  padding: 3rem;
+  text-align: center;
+  color: var(--color-success);
+  font-size: 1.1rem;
+}
